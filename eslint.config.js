@@ -97,7 +97,7 @@ export default [
 		},
 	},
 	{
-		files: ['hub/**/*.{js,ts,jsx,tsx}'],
+		files: ['**/*.{ts,tsx}'],
 		plugins: {'@typescript-eslint': tsEslint.plugin},
 		languageOptions: {
 			parser: tsParser,

@@ -9,6 +9,7 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-terser": "^0.4.4",
     "@tailwindcss/vite": "^4.1.18",
+    "@types/fs-extra": "^11.0.4",
     "@typescript-eslint/parser": "^8.54.0",
     "bundlemon": "^3.1.0",
     "chai": "^6.2.2",
@@ -17,6 +18,7 @@
     "eslint-plugin-baseline-js": "^0.5.0",
     "eslint-plugin-import-x": "^4.16.1",
     "eslint-plugin-vue": "^10.7.0",
+    "fs-extra": "^11.3.3",
     "globals": "^17.3.0",
     "http-server": "^14.1.1",
     "husky": "^9.1.7",
@@ -39,9 +41,11 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.54.0",
     "ui-event-simulator": "^2.0.0",
+    "vite-node": "^5.3.0",
     "vitepress": "2.0.0-alpha.16",
     "vue": "^3.5.27",
-    "vue-eslint-parser": "^10.2.0"
+    "vue-eslint-parser": "^10.2.0",
+    "yaml": "^2.8.2"
   },
   "type": "module",
   "exports": {
@@ -69,6 +73,7 @@
     "serve": "cd docs && bundle exec jekyll serve",
     "prepare": "husky",
     "docs:dev": "vitepress dev hub",
+    "docs:generate:plugins": "vite-node ./scripts/generate-plugins.ts",
     "docs:build": "vitepress build hub",
     "docs:preview": "vitepress preview hub"
   },

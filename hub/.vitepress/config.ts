@@ -28,7 +28,7 @@ export default defineConfig({
 		},
 		nav: [
 			{text: 'Blog', link: '/blog'},
-			{text: 'Examples', link: '/markdown-examples'}
+			{text: 'Plugins', link: '/plugins'}
 		],
 		sidebar: {
 			'/blog': [],
