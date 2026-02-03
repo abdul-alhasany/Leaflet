@@ -6,8 +6,26 @@ import {fileURLToPath} from 'node:url';
 export default defineConfig({
 	title: 'Leaflet Hub',
 	description: 'Leaflet blog, api reference and documentation',
+	head: [
+		[
+			'link',
+			{rel: 'stylesheet', href: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'}
+		],
+		[
+			'link',
+			{rel: 'preconnect', href: 'https://unpkg.com'}
+		],
+		[
+			'script',
+			{src: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', integrity: 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=', crossorigin: 'anonymous'}
+		]
+	],
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
+		logo: './logo.png',
+		search: {
+			provider: 'local'
+		},
 		nav: [
 			{text: 'Blog', link: '/blog'},
 			{text: 'Examples', link: '/markdown-examples'}
