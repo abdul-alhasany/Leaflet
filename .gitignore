@@ -16,3 +16,6 @@ debug/local/
 yarn.lock
 *.log
 .eslintcache
+
+hub/.vitepress/dist
+hub/.vitepress/cache

@@ -8,12 +8,16 @@
     "@mapbox/eslint-plugin-script-tags": "^1.0.0",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-terser": "^0.4.4",
+    "@tailwindcss/vite": "^4.1.18",
+    "@typescript-eslint/parser": "^8.54.0",
     "bundlemon": "^3.1.0",
     "chai": "^6.2.2",
     "eslint": "^9.39.2",
     "eslint-config-mourner": "^4.1.0",
     "eslint-plugin-baseline-js": "^0.5.0",
     "eslint-plugin-import-x": "^4.16.1",
+    "eslint-plugin-vue": "^10.7.0",
+    "globals": "^17.3.0",
     "http-server": "^14.1.1",
     "husky": "^9.1.7",
     "karma": "^6.4.4",
@@ -31,7 +35,13 @@
     "rollup": "^4.57.1",
     "sinon": "^21.0.1",
     "ssri": "^13.0.0",
-    "ui-event-simulator": "^2.0.0"
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0",
+    "ui-event-simulator": "^2.0.0",
+    "vitepress": "2.0.0-alpha.16",
+    "vue": "^3.5.27",
+    "vue-eslint-parser": "^10.2.0"
   },
   "type": "module",
   "exports": {
@@ -57,7 +67,10 @@
     "lintfix": "npm run lint -- --fix",
     "bundlemon": "bundlemon",
     "serve": "cd docs && bundle exec jekyll serve",
-    "prepare": "husky"
+    "prepare": "husky",
+    "docs:dev": "vitepress dev hub",
+    "docs:build": "vitepress build hub",
+    "docs:preview": "vitepress preview hub"
   },
   "repository": {
     "type": "git",

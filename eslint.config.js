@@ -4,11 +4,16 @@ import scriptTags from '@mapbox/eslint-plugin-script-tags';
 import importPlugin from 'eslint-plugin-import-x';
 import globals from 'globals';
 import baselineJs from 'eslint-plugin-baseline-js';
+import tsEslint from 'typescript-eslint';
+import tsParser from '@typescript-eslint/parser';
+import pluginVue from 'eslint-plugin-vue';
+import VueParser from 'vue-eslint-parser';
 
 export default [
+	...pluginVue.configs['flat/recommended'],
 	...config.map(c => ({
 		...c,
-		files: ['**/*.js', '**/*.cjs'],
+		files: ['**/*.js', '**/*.cjs', '**/*.ts', '**/*.vue']
 	})),
 	{
 		ignores: [
@@ -27,7 +32,7 @@ export default [
 		]
 	},
 	{
-		files: ['**/*.js', '**/*.cjs'],
+		files: ['**/*.js', '**/*.cjs', '**/*.ts'],
 		plugins: {
 			import: importPlugin
 		},
@@ -89,6 +94,42 @@ export default [
 				]},
 				includeJsBuiltins: {preset: 'auto'},
 			}],
+		},
+	},
+	{
+		files: ['hub/**/*.{js,ts,jsx,tsx}'],
+		plugins: {'@typescript-eslint': tsEslint.plugin},
+		languageOptions: {
+			parser: tsParser,
+			parserOptions: {
+				sourceType: 'module',
+			},
+		},
+		rules:{
+			'@stylistic/semi': ['error', 'always']
+		}
+	},
+	{
+		files: ['*.vue', '**/*.vue'],
+		languageOptions: {
+			parser: VueParser,
+			parserOptions: {
+				parser: tsParser,
+				ecmaFeatures: {
+					jsx: true,
+				},
+				extraFileExtensions: ['.vue'],
+				sourceType: 'module',
+			},
+		},
+		plugins: {
+			'@typescript-eslint': tsEslint.plugin,
+			'vue': pluginVue
+		},
+		rules: {
+			'no-undef': 'off',
+			'no-unused-vars': 'off',
+			'@stylistic/semi': ['error', 'always']
 		},
 	},
 	{
