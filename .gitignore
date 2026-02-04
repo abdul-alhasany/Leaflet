@@ -22,3 +22,4 @@ hub/.vitepress/cache
 
 # Generated plugin index files
 hub/plugins/**/index.md
+hub/plugins/plugins-index.md

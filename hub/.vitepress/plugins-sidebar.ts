@@ -111,5 +111,86 @@ export default [
 			}
 		],
 		"collapsed": true
+	},
+	{
+		"text": "Overlay display",
+		"link": "/plugins/overlay-display/",
+		"items": [
+			{
+				"text": "Clustering/Decluttering",
+				"link": "/plugins/overlay-display/clustering-decluttering/"
+			},
+			{
+				"text": "DataViz",
+				"link": "/plugins/overlay-display/dataviz/"
+			},
+			{
+				"text": "Heatmaps",
+				"link": "/plugins/overlay-display/heatmaps/"
+			},
+			{
+				"text": "Markers & renderers",
+				"link": "/plugins/overlay-display/markers-renderers/"
+			},
+			{
+				"text": "Overlay animations",
+				"link": "/plugins/overlay-display/overlay-animations/"
+			}
+		],
+		"collapsed": true
+	},
+	{
+		"text": "Interaction with geometries/features",
+		"link": "/plugins/overlay-interaction/",
+		"items": [
+			{
+				"text": "Area/overlay selection",
+				"link": "/plugins/overlay-interaction/area-overlay-selection/"
+			},
+			{
+				"text": "Edit geometries",
+				"link": "/plugins/overlay-interaction/edit-geometries/"
+			},
+			{
+				"text": "Search & popups",
+				"link": "/plugins/overlay-interaction/search-popups/"
+			},
+			{
+				"text": "Time & elevation",
+				"link": "/plugins/overlay-interaction/time-elevation/"
+			}
+		],
+		"collapsed": true
+	},
+	{
+		"text": "Tile & image layers",
+		"link": "/plugins/tile-image-layers/",
+		"items": [
+			{
+				"text": "Basemap formats",
+				"link": "/plugins/tile-image-layers/basemap-formats/"
+			},
+			{
+				"text": "Basemap providers",
+				"link": "/plugins/tile-image-layers/basemap-providers/"
+			},
+			{
+				"text": "Non-map base layers",
+				"link": "/plugins/tile-image-layers/non-map-base-layers/"
+			},
+			{
+				"text": "Tile/image display",
+				"link": "/plugins/tile-image-layers/tile-image-display/"
+			},
+			{
+				"text": "Tile Load",
+				"link": "/plugins/tile-image-layers/tile-load/"
+			},
+			{
+				"text": "Vector tiles",
+				"link": "/plugins/tile-image-layers/vector-tiles/"
+			}
+		],
+		"collapsed": true
 	}
 ];

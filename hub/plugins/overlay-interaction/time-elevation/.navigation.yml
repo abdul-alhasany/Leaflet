@@ -1,0 +1,2 @@
+title: Time & elevation
+description: Most data is two-dimensional (latitude and longitude), but some data has more dimensions (altitude and/or time). The following plugins help users navigate these extra dimensions.

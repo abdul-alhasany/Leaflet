@@ -98,3 +98,75 @@ Load your own data from various GIS formats.
 
 These plugins create useful overlays from scratch, no loading required.
 
+## Overlay display
+
+The following plugins provide new ways of displaying overlay data information.
+
+### [Clustering/Decluttering](/plugins/overlay-display/clustering-decluttering/)
+
+When you are displaying a lot of data, these plugins will make your map look cleaner.
+
+### [DataViz](/plugins/overlay-display/dataviz/)
+
+Powerful multi-purpose libraries for data visualization.
+
+### [Heatmaps](/plugins/overlay-display/heatmaps/)
+
+These plugins create heatmaps and heatmap-like visualizations from vector data.
+
+### [Markers & renderers](/plugins/overlay-display/markers-renderers/)
+
+These plugins provide new markers or news ways of converting abstract data into images in your screen. Leaflet users versed in GIS also know these as symbolizers.
+
+### [Overlay animations](/plugins/overlay-display/overlay-animations/)
+
+These plugins animate markers or some geometries. See also geometries with time or elevation.
+
+## Interaction with geometries/features
+
+The following plugins enable users to interact with overlay data: edit geometries, select areas or features, interact with the time dimension, search features and display information about them.
+
+### [Area/overlay selection](/plugins/overlay-interaction/area-overlay-selection/)
+
+These plugins help users select either overlays or areas in the map.
+
+### [Edit geometries](/plugins/overlay-interaction/edit-geometries/)
+
+Allows users to create, draw, edit and/or delete points, lines and polygons.
+
+### [Search & popups](/plugins/overlay-interaction/search-popups/)
+
+Plugins that search for overlays and enhance how to display information about them.
+
+### [Time & elevation](/plugins/overlay-interaction/time-elevation/)
+
+Most data is two-dimensional (latitude and longitude), but some data has more dimensions (altitude and/or time). The following plugins help users navigate these extra dimensions.
+
+## Tile & image layers
+
+The following plugins allow loading different maps and provide functionality to tile and image layers.
+
+### [Basemap formats](/plugins/tile-image-layers/basemap-formats/)
+
+Plugins for loading basemaps or GIS raster layers in common (albeit non-default) formats.
+
+### [Basemap providers](/plugins/tile-image-layers/basemap-providers/)
+
+Ready-to-go basemaps, with little or no configuration at all.
+
+### [Non-map base layers](/plugins/tile-image-layers/non-map-base-layers/)
+
+Sometimes you don’t want to load a map, just big custom images. **Really** big ones.
+
+### [Tile/image display](/plugins/tile-image-layers/tile-image-display/)
+
+The following plugins change the way that tile or image layers are displayed in the map.
+
+### [Tile Load](/plugins/tile-image-layers/tile-load/)
+
+The following plugins change the way that tile layers are loaded into the map.
+
+### [Vector tiles](/plugins/tile-image-layers/vector-tiles/)
+
+Plugins to display [vector tiles](https://github.com/mapbox/vector-tile-spec)
+
