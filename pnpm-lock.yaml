@@ -11,6 +11,9 @@ importers:
       '@eslint/css':
         specifier: ^0.14.1
         version: 0.14.1
+      '@kalimahapps/cli-progress':
+        specifier: ^1.0.4
+        version: 1.0.4
       '@mapbox/eslint-plugin-script-tags':
         specifier: ^1.0.0
         version: 1.0.0
@@ -492,6 +495,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@kalimahapps/cli-progress@1.0.4':
+    resolution: {integrity: sha512-SPr+tV2yWx6z4KSjZPZ2fg/Skp3+m1iwvLtl+pXb6UwONo8e3wOZmSb2yJye238sN2NfF5C5toXtzXckFOa8lg==}
 
   '@mapbox/eslint-plugin-script-tags@1.0.0':
     resolution: {integrity: sha512-csn1ZCxRpOr3lx+9m8FqE14Bdww1tKKnluWFmO+Xb2WcCQIwS/xe5wlfim7CCoAVK2KQVOIqaMwlMg1SnXrECQ==}
@@ -1262,6 +1268,10 @@ packages:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
 
+  chalk@5.6.2:
+    resolution: {integrity: sha512-7NzBL0rN6fMUW+f7A6Io4h40qQlG+xGmtMxfbnH/K7TAtt8JQWVQK+6g0UXKMeVJoyV5EkkNsErQ8pVD3bLHbA==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+
   character-entities-html4@2.1.0:
     resolution: {integrity: sha512-1v7fgQRj6hnSwFpq1Eu0ynr/CDEw0rXo2B61qXrLNdHZmPKgb7fqS1a2JwF0rISo9q77jDI8VMEHoApn8qDoZA==}
 
@@ -1279,6 +1289,10 @@ packages:
   cli-cursor@5.0.0:
     resolution: {integrity: sha512-aCj4O5wKyszjMmDT4tZj93kxyydN/K5zPWSCe6/0AV/AA1pqe5ZBIw0a2ZfPQV7lL5/yb5HsUreJ6UFAF1tEQw==}
     engines: {node: '>=18'}
+
+  cli-progress@3.12.0:
+    resolution: {integrity: sha512-tRkV3HJ1ASwm19THiiLIXLO7Im7wlTuKnvkYaTkyoAPefqjNg7W7DHKUlGRxy9vxDvbyCYQkQozvptuMkGCg8A==}
+    engines: {node: '>=4'}
 
   cli-truncate@5.1.1:
     resolution: {integrity: sha512-SroPvNHxUnk+vIW/dOSfNqdy1sPEFkrTk6TUtqLCnBlo3N7TNYYkzzN7uSD6+jVjrdO4+p8nH7JzH6cIvUem6A==}
@@ -3437,6 +3451,11 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
+  '@kalimahapps/cli-progress@1.0.4':
+    dependencies:
+      chalk: 5.6.2
+      cli-progress: 3.12.0
+
   '@mapbox/eslint-plugin-script-tags@1.0.0':
     dependencies:
       execall: 2.0.0
@@ -4166,6 +4185,8 @@ snapshots:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
 
+  chalk@5.6.2: {}
+
   character-entities-html4@2.1.0: {}
 
   character-entities-legacy@3.0.0: {}
@@ -4189,6 +4210,10 @@ snapshots:
   cli-cursor@5.0.0:
     dependencies:
       restore-cursor: 5.1.0
+
+  cli-progress@3.12.0:
+    dependencies:
+      string-width: 4.2.3
 
   cli-truncate@5.1.1:
     dependencies:

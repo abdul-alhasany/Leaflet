@@ -19,3 +19,6 @@ yarn.lock
 
 hub/.vitepress/dist
 hub/.vitepress/cache
+
+# Generated plugin index files
+hub/plugins/**/index.md

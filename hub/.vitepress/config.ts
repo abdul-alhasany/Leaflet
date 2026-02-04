@@ -1,6 +1,7 @@
 import {defineConfig} from 'vitepress';
 import tailwindcss from '@tailwindcss/vite';
 import {fileURLToPath} from 'node:url';
+import pluginsSidebar from './plugins-sidebar';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -32,6 +33,7 @@ export default defineConfig({
 		],
 		sidebar: {
 			'/blog': [],
+			'/plugins': pluginsSidebar,
 			'/':[
 				{text: 'Examples', link: '/markdown-examples'},
 				{text: 'Blog', link: '/blog/'},
