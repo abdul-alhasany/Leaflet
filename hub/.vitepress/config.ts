@@ -55,7 +55,8 @@ export default defineConfig({
 			],
 		},
 		socialLinks: [
-			{icon: 'github', link: 'https://github.com/vuejs/vitepress'}
+			{icon: 'github', link: 'https://github.com/Leaflet/Leaflet'},
+			{icon: 'twitter', link: 'https://x.com/LeafletJS'},
 		],
 	},
 	vite: {
