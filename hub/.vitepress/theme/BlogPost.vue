@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {computed} from 'vue';
-import {useData, useRoute,} from 'vitepress';
+import {useData, useRoute, withBase} from 'vitepress';
 import {data as posts} from './blog.data.js';
 const {frontmatter} = useData();
 const route = useRoute();
 
 const findCurrentIndex = function () {
-    return posts.findIndex(p => p.url === route.path);
+    return posts.findIndex(p => withBase(p.url) === route.path);
 };
 
 // use the customData date which contains pre-resolved date info

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {withBase} from 'vitepress';
 import {data as posts} from './blog.data.js';
 </script>
 
@@ -18,7 +19,7 @@ import {data as posts} from './blog.data.js';
         <div class="space-y-5 xl:col-span-3">
           <div class="space-y-6">
             <h2 class="mt-0! border-t-0!">
-              <a :href="blogPost.url">{{ blogPost.title }}</a>
+              <a :href="withBase(blogPost.url)">{{ blogPost.title }}</a>
             </h2>
             <div
               v-if="blogPost.excerpt"
