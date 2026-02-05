@@ -24,7 +24,6 @@ export default createContentLoader('blog/*.md', {
 		return raw
 			.map((data) => {
 				const {url, frontmatter, excerpt} = data;
-				console.log(url);
 				return {
 					title: frontmatter.title,
 					url,

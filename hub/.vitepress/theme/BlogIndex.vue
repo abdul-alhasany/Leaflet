@@ -30,7 +30,7 @@ import {data as posts} from './blog.data.js';
             <a
               class="link"
               aria-label="read more"
-              :href="blogPost.url"
+              :href="withBase(blogPost.url)"
             >Read more →</a>
           </div>
         </div>

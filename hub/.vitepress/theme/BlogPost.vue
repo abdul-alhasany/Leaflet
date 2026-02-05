@@ -19,7 +19,7 @@ const prevPost = computed(() => posts[findCurrentIndex() + 1]);
   <div class="pb-24">
     <div class="container mx-auto max-w-[1104px] vp-doc">
       <div class="pt-10">
-        <a href="/blog">
+        <a :href="withBase('/blog')">
           ← Back to the list of blog posts
         </a>
       </div>
@@ -43,32 +43,28 @@ const prevPost = computed(() => posts[findCurrentIndex() + 1]);
         <Content class="prose dark:prose-invert max-w-none pt-10 pb-8" />
       </article>
       <nav class="border-t-(--vp-c-divider) grid gap-2 grid-cols-1 sm:grid-cols-2 mt-16">
-        <div>
-          <a
-            v-if="prevPost?.url"
-            class="flex flex-col gap-1 border border-(--vp-c-divider) rounded-lg p-4 hover:border-(--vp-c-brand-1) transition-colors font-medium"
-            :href="prevPost.url"
-          >
-            <div class="text-(--vp-c-text-2) text-xs">Previous page</div>
-            <div
-              class="text-(--vp-c-brand-1) text-sm"
-              v-html="prevPost.title"
-            />
-          </a>
-        </div>
-        <div class="pager">
-          <a
-            v-if="nextPost?.url"
-            class="flex flex-col gap-1 border border-(--vp-c-divider) rounded-lg p-4 hover:border-(--vp-c-brand-1) transition-colors text-end font-medium"
-            :href="nextPost.url"
-          >
-            <div class="text-(--vp-c-text-2) text-xs ">Next page</div>
-            <div
-              class="text-(--vp-c-brand-1) text-sm"
-              v-html="nextPost.title"
-            />
-          </a>
-        </div>
+        <a
+          v-if="prevPost?.url"
+          class="flex flex-col gap-1 border border-(--vp-c-divider) rounded-lg p-4 hover:border-(--vp-c-brand-1) transition-colors font-medium no-underline!"
+          :href="withBase(prevPost.url)"
+        >
+          <div class="text-(--vp-c-text-2) text-xs">Previous page</div>
+          <div
+            class="text-(--vp-c-brand-1) text-sm"
+            v-html="prevPost.title"
+          />
+        </a>
+        <a
+          v-if="nextPost?.url"
+          class="flex flex-col gap-1 border border-(--vp-c-divider) rounded-lg p-4 hover:border-(--vp-c-brand-1) transition-colors text-end font-medium no-underline!"
+          :href="withBase(nextPost.url)"
+        >
+          <div class="text-(--vp-c-text-2) text-xs ">Next page</div>
+          <div
+            class="text-(--vp-c-brand-1) text-sm"
+            v-html="nextPost.title"
+          />
+        </a>
       </nav>
     </div>
   </div>

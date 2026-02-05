@@ -8,11 +8,11 @@ hero:
   tagline: an open-source JavaScript library for mobile-friendly interactive maps
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Blog
+      link: /blog
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Plugins
+      link: /plugins
 
 features:
   - icon: 🗺️
@@ -67,7 +67,7 @@ L.marker([51.5, -0.09]).addTo(map)
   </div>
 </div>
 
-If you find some feature really missing in Leaflet, first check if there's a [plugin for it](https://leafletjs.com/plugins.html) and if it's been discussed before already on [GitHub issues](https://github.com/Leaflet/Leaflet/issues). If not, please open a new GitHub issue.
+If you find some feature really missing in Leaflet, first check if there's a [plugin for it](/plugins) and if it's been discussed before already on [GitHub issues](https://github.com/Leaflet/Leaflet/issues). If not, please open a new GitHub issue.
 
 ## Getting Involved
 
