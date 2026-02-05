@@ -4,6 +4,13 @@ title: Leaflet.draw 0.2 Released
 description: Leaflet.draw 0.2 released &mdash; brings vector drawing and editing tools to your Leaflet map.
 author: Jacob Toye
 authorsite: https://github.com/jacobtoye/
+head:
+  - - link
+    - href: https://leaflet.github.io/Leaflet.draw/lib/leaflet/leaflet.css
+      rel: stylesheet
+  - - link
+    - href: https://leaflet.github.io/Leaflet.draw/leaflet.draw.css
+      rel: stylesheet
 ---
 
 _This is a guest post from Jacob Toye, an active Leaflet contributor and also the author of the most sophisticated vector drawing and editing plugin out there, which is presented in this post._
@@ -20,7 +27,6 @@ You can download the latest version from the <a href="https://github.com/Leaflet
 
 <div id="map" class="map" style="height: 288px"></div>
 
-{:#plugin-features}
 ### Features
 
 Leaflet.draw is designed to not only be easy for end users to use, but also for developers to integrate.
@@ -37,49 +43,53 @@ Leaflet.draw is designed to not only be easy for end users to use, but also for 
 
 Leaflet.draw is very simple to drop into you Leaflet application. The following example will add both the draw and edit toolbars to a map:
 
-	// create a map in the "map" div, set the view to a given place and zoom
-	var map = L.map('map').setView([175.30867, -37.77914], 13);
+```js
+// create a map in the "map" div, set the view to a given place and zoom
+var map = L.map('map').setView([175.30867, -37.77914], 13);
 
-	// add an OpenStreetMap tile layer
-	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-	}).addTo(map);
+// add an OpenStreetMap tile layer
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
 
-	// Initialize the FeatureGroup to store editable layers
-	var drawnItems = new L.FeatureGroup();
-	map.addLayer(drawnItems);
+// Initialize the FeatureGroup to store editable layers
+var drawnItems = new L.FeatureGroup();
+map.addLayer(drawnItems);
 
-	// Initialize the draw control and pass it the FeatureGroup of editable layers
-	var drawControl = new L.Control.Draw({
-		edit: {
-			featureGroup: drawnItems
-		}
-	});
-	map.addControl(drawControl);
+// Initialize the draw control and pass it the FeatureGroup of editable layers
+var drawControl = new L.Control.Draw({
+	edit: {
+		featureGroup: drawnItems
+	}
+});
+map.addControl(drawControl);
+```
 
 #### Handling newly created layers
 
 Once you have successfully added the Leaflet.draw plugin your map you will want to respond to the different actions users can trigger.
 
-	map.on('draw:created', function (e) {
-		var type = e.layerType,
-			layer = e.layer;
+```js
+map.on('draw:created', function (e) {
+	var type = e.layerType,
+		layer = e.layer;
 
-		if (type === 'marker') {
-			// Do marker specific actions
-		}
+	if (type === 'marker') {
+		// Do marker specific actions
+	}
 
-		// Do whatever else you need to. (save to db, add to map etc)
-		drawnItems.addLayer(layer);
-	});
+	// Do whatever else you need to. (save to db, add to map etc)
+	drawnItems.addLayer(layer);
+});
 
-	map.on('draw:edited', function () {
-		// Update db to save latest changes.
-	});
+map.on('draw:edited', function () {
+	// Update db to save latest changes.
+});
 
-	map.on('draw:deleted', function () {
-		// Update db to save latest changes.
-	});
+map.on('draw:deleted', function () {
+	// Update db to save latest changes.
+});
+```
 
 See the <a href="https://github.com/Leaflet/Leaflet.draw" target="_blank">Leaflet.draw README</a> for more details on how to configure the plugin.
 
@@ -96,22 +106,17 @@ I've had a great time implementing this plugin. I hope you enjoy using it. If yo
 Cheers,
 Jacob Toye
 
-<link rel="stylesheet" href="https://leaflet.github.io/Leaflet.draw/lib/leaflet/leaflet.css" />
-<link rel="stylesheet" href="https://leaflet.github.io/Leaflet.draw/leaflet.draw.css" />
-<!--[if lte IE 8]>
-	<link rel="stylesheet" href="https://leaflet.github.io/Leaflet.draw/lib/leaflet/leaflet.ie.css" />
-	<link rel="stylesheet" href="https://leaflet.github.io/Leaflet.draw/leaflet.draw.ie.css" />
-<![endif]-->
-<script src="https://leaflet.github.io/Leaflet.draw/libs/leaflet/leaflet.js"></script>
-<script src="https://leaflet.github.io/Leaflet.draw/leaflet.draw.js"></script>
-
-<style>
+<style module>
 	.leaflet-bar {
 		border: none;
 	}
 </style>
 
-<script>
+<script setup>
+setTimeout(() => {
+	if(typeof window === 'undefined' || !L){
+		return;
+	}
 	// create a map in the "map" div, set the view to a given place and zoom
 	var map = L.map('map').setView([-37.77914, 175.30867], 16);
 
@@ -142,4 +147,5 @@ Jacob Toye
 		// Do whatever else you need to. (save to db, add to map etc)
 		drawnItems.addLayer(layer);
 	});
+}, 100);
 </script>

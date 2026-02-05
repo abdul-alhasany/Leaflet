@@ -11,30 +11,30 @@ After 5.5 months of development with [33 contributors](https://github.com/Leafle
 ### Simpler API
 
 Leaflet 0.4 contains several API improvements that allow you to write simpler, terser code ([jQuery](http://jquery.com)-like), while being backwards compatible with the previous approach (so that you can use both styles).
-
-	L.marker([51.5, -0.09])
-    	.addTo(map)
-    	.bindPopup('Hello world!')
-    	.openPopup();
-
+```js
+L.marker([51.5, -0.09])
+	.addTo(map)
+	.bindPopup('Hello world!')
+	.openPopup();
+```
 First, Leaflet methods now accept [LatLng][], [LatLngBounds][], [Point][] and [Bounds][] objects in a simple array form, so you don't need to always create them explicitly:
-
+```js
 	map.panTo([50, 30]); // the same as:
 	map.panTo(new L.LatLng(50, 30));
-
+```
 Second, Map methods like [addLayer][], [addControl][], [openPopup][] got their counterparts from the other side:
-
+```js
 	marker.addTo(map);  // same as map.addLayer(marker)
 	control.addTo(map); //         map.addControl(control)
 	popup.openOn(map);  //         map.openPopup(popup)
-
+```
 Along with the fact that all Leaflet methods that don't explicitly return a value return the object itself, this allows for convenient method chaining.
 
-Third, Leaflet classes now come with lowercase shortcuts (class factories) that allow you to create objects without the <code>new</code> keyword, which makes chained code look nicer:
-
+Third, Leaflet classes now come with lowercase shortcuts (class factories) that allow you to create objects without the `new` keyword, which makes chained code look nicer:
+```js
 	L.map('map').fitWorld(); // same as
 	(new L.Map('map')).fitWorld();
-
+```
 ### Notable New Features
 
 <div id="map" class="map" style="height: 250px"></div>
@@ -60,28 +60,30 @@ In the previous Leaflet version, pinch-zoom only worked on iOS devices, but now 
 #### Scale Control
 
 A simple, lightweight control that indicates the scale of the current map view in metric and/or imperial systems. As usual, you can customize its appearance with CSS. Take a look at the bottom left corner of the map above!
-
+```js
 	L.control.scale().addTo(map);
-
+```
 #### Polyline and Polygon Editing
 
 Allows users to edit polylines and polygons with a simple, intuitive interface. Note that this feature will eventually be merged into [Leaflet.draw][] --- an awesome plugin for drawing shapes by Jacob Toye.
-
+```js
 	polygon.editing.enable();
-
+```
 #### Div-based Icons
 
 In addition to the image-based [Icon][] class, Leaflet 0.4 gets a [DivIcon][] class for creating lightweight div-based markers (that can contain custom HTML and can be styled with CSS). For example, you can see them in action when editing polylines (the square handles), or in the [Leaflet.markercluster][] plugin I'll talk about later (the colored clusters).
-
-	L.marker([50.505, 30.57], {
-		icon: L.divIcon({className: 'my-div-icon'})
-	}).addTo(map);
-
+```js
+L.marker([50.505, 30.57], {
+	icon: L.divIcon({className: 'my-div-icon'})
+}).addTo(map);
+```
 #### Rectangle Layer
 
 Rectangle is a convenient shortcut for creating rectangular area layers. You could do this earlier with polygons, but this is easier:
 
-	L.rectangle([[51.505, -0.03], [51.5, -0.045]]).addTo(map);
+```js
+L.rectangle([[51.505, -0.03], [51.5, -0.045]]).addTo(map);
+```
 
 ### API improvements
 
@@ -100,16 +102,16 @@ Custom Controls are much easier to create now --- checkout the [API docs](../../
 #### Better Events API
 
 [Aaron King][] brought some improvements to [event methods](../../../reference.html#events). `on` and `off` methods can now accept multiple event types at once as a string space-separated types:
-
-	map.on('click dblclick moveend', doStuff);
-
+```js
+map.on('click dblclick moveend', doStuff);
+```
 Also, they can accept an object with types and listener functions as key/value pairs, like this:
-
-	marker.on({
-		click: onMarkerClick,
-		dragend: onMarkerDragEnd
-	});
-
+```js
+marker.on({
+	click: onMarkerClick,
+	dragend: onMarkerDragEnd
+});
+```
 Moreover, now if you only specify an event type to the `off` method, it will remove all listeners tied to this event.
 
 	map.off('click');
@@ -212,7 +214,12 @@ Vladimir Agafonkin, Leaflet maintainer.
  [George MacKerron]: https://github.com/jawj/
  [Jacob Toye]: https://github.com/jacobtoye
 
-<script>
+<script setup>
+setTimeout(() => {
+	if(typeof window === 'undefined' || !L){
+		console.warn('Leaflet is not loaded yet');
+		return;
+	}
 	var map = L.map('map').setView([51.503, -0.09], 13);
 
 	L.tileLayer(MB_URL, {attribution: MB_ATTR, id: 'examples.map-i875mjb7'}).addTo(map);
@@ -237,4 +244,5 @@ Vladimir Agafonkin, Leaflet maintainer.
 		[51.505, -0.03],
 		[51.5, -0.045]
 	], {weight: 1, opacity: 0.8}).addTo(map).bindPopup('I am a rectangle.');
+}, 100);
 </script>

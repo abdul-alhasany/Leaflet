@@ -77,19 +77,19 @@ You can help the project tremendously by discovering and reporting bugs, improvi
 
 Check out the contribution guide for more information on getting involved with Leaflet development.
 <script setup>
-   import { onMounted } from 'vue';
+import { onMounted } from 'vue';
 
-  onMounted(() => {
-      window.setTimeout(() => {
-        const map = L.map('map').setView([51.505, -0.09], 13);
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-        L.marker([51.5, -0.09]).addTo(map)
-          .bindPopup('A pretty CSS popup.<br> Easily customizable.')
-          .openPopup();
-      }, 100);
-  });
+onMounted(() => {
+    window.setTimeout(() => {
+      const map = L.map('map').setView([51.505, -0.09], 13);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+      L.marker([51.5, -0.09]).addTo(map)
+        .bindPopup('A pretty CSS popup.<br> Easily customizable.')
+        .openPopup();
+    }, 100);
+});
 </script>
 
 <style scoped>

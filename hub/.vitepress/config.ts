@@ -1,7 +1,7 @@
 import {defineConfig} from 'vitepress';
 import tailwindcss from '@tailwindcss/vite';
 import {fileURLToPath} from 'node:url';
-import pluginsSidebar from './plugins-sidebar';
+import pluginsSidebar from './plugins-sidebar.js';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -19,7 +19,20 @@ export default defineConfig({
 		[
 			'script',
 			{src: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', integrity: 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=', crossorigin: 'anonymous'}
+		],
+		[
+			'script',
+			{},
+			`
+    	ACCESS_TOKEN = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+		MB_ATTR = 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
+		MB_URL = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + ACCESS_TOKEN;
+		OSM_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+		OSM_ATTRIB = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+      `
 		]
+
 	],
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
@@ -53,4 +66,6 @@ export default defineConfig({
 		},
 		plugins: [tailwindcss()],
 	},
+	// @todo remove later to enforce proper links
+	ignoreDeadLinks: true,
 });

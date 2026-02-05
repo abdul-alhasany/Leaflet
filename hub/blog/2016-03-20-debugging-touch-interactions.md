@@ -16,14 +16,14 @@ Fortunately, all of the browser-specific hacks in Leaflet can be easily seen by 
 
 This can lead to somewhat [undesirable code](https://github.com/Leaflet/Leaflet/blob/main/src/dom/DomEvent.DoubleTap.js#L65) sometimes:
 
-<pre><code class="javascript">    // On some platforms (notably, chrome on win10 + touchscreen + mouse),
-    // the browser doesn't fire touchend/pointerup events but does fire
-    // native dblclicks. See #4127.
-    if (!L.Browser.edge) {
-    	obj.addEventListener('dblclick', handler, false);
-    }
-</code></pre>
-
+```js
+// On some platforms (notably, chrome on win10 + touchscreen + mouse),
+// the browser doesn't fire touchend/pointerup events but does fire
+// native dblclicks. See #4127.
+if (!L.Browser.edge) {
+	obj.addEventListener('dblclick', handler, false);
+}
+```
 I've been told more than a few times by browser developers that browser sniffing is wrong, and that feature detection is right. I mean, detecting 3D CSS transforms and HTML5 `<video>` support is easy, but there is no (sane) way to detect if a browser fires a `dblclick` event by itself when double-tapping a touchscreen.
 
 Debugging touch interactions is particularly tricky. Sometimes the conditions to reproduce a touch-interaction bug is simple (double-tap the touchscreen in the same spot), but sometimes they are more specific. In [#3798](https://github.com/Leaflet/Leaflet/issues/3798) and [#3814](https://github.com/Leaflet/Leaflet/issues/3814) the conditions are "drag with one finger, then put down another finger and pinch", and in [#3530](https://github.com/Leaflet/Leaflet/issues/3530) it's "pinch in until `maxZoom` is reached, then do a two-finger drag".
@@ -52,28 +52,31 @@ With prosthetic-hand, I can now automate a pinch-zoom gesture in a Leaflet webpa
 
 <table class="image">
 <caption align="bottom"><small>You get to see my disembodied fingers as a bonus</small></caption>
-<tr><td style='text-align:center'><img src="/docs/images/2016-03-20-prosthetic-hand-zooming.gif" alt="Animated screenshot of prosthetic-hand zooming in and out"/></td></tr>
+<tr><td style='text-align:center'><img src="/images/2016-03-20-prosthetic-hand-zooming.gif" alt="Animated screenshot of prosthetic-hand zooming in and out"/></td></tr>
 </table>
 
 
 With this library loaded, just ask for an extra hand (with a specific timing mode):
-<pre><code class="javascript">var h = new Hand({ timing: 'frame' });
-</code></pre>
+```js
+var h = new Hand({ timing: 'frame' });
+```
 
 Then grow some fingers:
-<pre><code class="javascript">var f1 = h.growFinger('touch');
+```js
+var f1 = h.growFinger('touch');
 var f2 = h.growFinger('touch');
-</code></pre>
+```
 
 Then move the fingers around (using pixel coordinates and milliseconds):
-<pre><code class="javascript">f1.wait(100).moveTo(250, 200, 0)
+```js
+f1.wait(100).moveTo(250, 200, 0)
 	.down().wait(500).moveBy(-200, 0, 1000).wait(500).up().wait(500)
 	.down().wait(500).moveBy( 200, 0, 1000).wait(500).up().wait(500);
 
 f2.wait(100).moveTo(350, 200, 0)
 	.down().wait(500).moveBy( 200, 0, 1000).wait(500).up().wait(500)
 	.down().wait(500).moveBy(-200, 0, 1000).wait(500).up().wait(500);
-</code></pre>
+```
 
 You can check this in the [live prosthetic-hand demos](https://leaflet.github.io/prosthetic-hand/demos/).
 

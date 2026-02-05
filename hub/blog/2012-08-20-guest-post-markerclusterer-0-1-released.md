@@ -1,9 +1,23 @@
 ---
 layout: post
 title: Leaflet.MarkerCluster 0.1 Released
-description: Introducing Leaflet.MarkerCluster, a beautiful, fast, customizable plugin to reduce the visual clutter on crowded maps.
+description: Introducing Leaflet.MarkerCluster, a beautiful, fast, customizable
+  plugin to reduce the visual clutter on crowded maps.
 author: Dave Leaver
 authorsite: https://github.com/danzel/
+head:
+  - - script
+    - src: https://leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js
+      name: leaflet.markercluster-src.js
+  - - script
+    - src: https://leaflet.github.io/Leaflet.markercluster/example/realworld.388.js
+      name: realworld.388.js
+  - - link
+    - href: https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.Default.css
+      rel: stylesheet
+  - - link
+    - href: https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.css
+      rel: stylesheet
 ---
 
 _This is a guest post from Dave Leaver, an active Leaflet contributor (particularly, he implemented 0.4 zoom animation improvements) and also the author of the best marker clustering plugin out there, which is presented in this post._
@@ -14,38 +28,41 @@ To improve this, many sites use marker clustering, a technique of grouping marke
 
 <div id="map" class="map" style="height: 320px"></div>
 
-{:#plugin-features}
+
 ### Features
 
 The clusterer has all sorts of great built in behaviour:
 
- * Everything is brilliantly animated. As you zoom in and out you can logically see which clusters have become which markers.
- * It is very fast, so for example [clustering 50,000 points](https://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-realworld.50000.html) isn't a problem. Also, all the heavy calculation happens on initial page load, and after this the map works smoothly.
- * Markers that don't need clustering aren't and will be visible at the relevant zoom levels.
- * When you mouse over a cluster the bounds of the marker within that cluster are shown.
- * Clicking a cluster will zoom you in to the bounds of its children.
- * At the bottom zoom level if there are still clusters you can click on them to "spiderfy" them, which makes interaction with individual markers within the cluster possible (based on <a href="https://github.com/jawj/OverlappingMarkerSpiderfier-Leaflet">jawj's Overlapping MarkerSpidifer</a>).
- * Cluster and markers that are further than a screen width from the view port are removed from the map to increase performance.
- * As with core Leaflet, everything works on both mobile and desktop browsers and is tested all the way back to IE6.
- * Supports adding and removing markers after being added to the map (see Best Practices below!).
- * It is highly customizable, allowing you to easily change the appearance of clusters, disable certain features and add custom behavior on cluster interaction.
+* Everything is brilliantly animated. As you zoom in and out you can logically see which clusters have become which markers.
+* It is very fast, so for example [clustering 50,000 points](https://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-realworld.50000.html) isn't a problem. Also, all the heavy calculation happens on initial page load, and after this the map works smoothly.
+* Markers that don't need clustering aren't and will be visible at the relevant zoom levels.
+* When you mouse over a cluster the bounds of the marker within that cluster are shown.
+* Clicking a cluster will zoom you in to the bounds of its children.
+* At the bottom zoom level if there are still clusters you can click on them to "spiderfy" them, which makes interaction with individual markers within the cluster possible (based on [jawj's Overlapping MarkerSpidifer](https://github.com/jawj/OverlappingMarkerSpiderfier-Leaflet)).
+* Cluster and markers that are further than a screen width from the view port are removed from the map to increase performance.
+* As with core Leaflet, everything works on both mobile and desktop browsers and is tested all the way back to IE6.
+* Supports adding and removing markers after being added to the map (see Best Practices below!).
+* It is highly customizable, allowing you to easily change the appearance of clusters, disable certain features and add custom behavior on cluster interaction.
 
 ### Usage
 
 Using the Marker Clusterer is easy, just replace your existing [LayerGroup](../../../examples/layers-control.html) usage with an `L.MarkerClusterGroup`:
 
-    var markers = new L.MarkerClusterGroup();
+```js
+var markers = new L.MarkerClusterGroup();
 
-	markers.addLayer(L.marker([175.3107, -37.7784]));
-	// add more markers here...
+markers.addLayer(L.marker([175.3107, -37.7784]));
+// add more markers here...
 
-	map.addLayer(markers);
+map.addLayer(markers);
+```
 
 You can also use all of the [FeatureGroup events](../../../reference.html#featuregroup) (and additionally `clusterclick`) for both individual markers and clusters.
 
-	markers.on('clusterclick', function (a) { alert('Cluster Clicked'); });
-	markers.on('click', function (a) { alert('Marker Clicked'); });
-
+```js
+markers.on('clusterclick', function (a) { alert('Cluster Clicked'); });
+markers.on('click', function (a) { alert('Marker Clicked'); });
+```
 ### Best Practices
 
  * To get the best performance from the clusterer, you should add all of your markers to it before adding it to the map (like we did in the example).
@@ -60,10 +77,10 @@ You can download the latest release on the <a href="https://github.com/leaflet/L
 
 The underlying clustering algorithm (`MarkerClusterGroup._cluster`) is plain greedy clustering.
 
-{: .no-highlight}
+<!-- {: .no-highlight}
     foreach marker
         if there is a cluster within the clustering distance, join it.
-        else if there is an unclustered marker within the clustering distance, form a cluster with it.
+        else if there is an unclustered marker within the clustering distance, form a cluster with it. -->
 
 The first clustering step we do for the maximum (bottom most) zoom level, we then cluster all of the resulting markers and clusters to generate the next zoom level up and so on until we have reached the top.
 These clusters are stored in a tree (A cluster contains its child clusters) with good geospatial qualities. We use this tree to optimise identifying what markers and clusters are on screen at any particular zoom level.
@@ -83,30 +100,36 @@ If you have any issues also please log a bug on <a href="https://github.com/leaf
 
 Enjoy!<br />
 Dave Leaver.
-
+<!--
 <link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.css" />
-<link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.Default.css" />
+<link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.Default.css" /> -->
 <!--[if lte IE 8]><link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.Default.ie.css" /><![endif]-->
-<script src="https://leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>
-<script src="https://leaflet.github.io/Leaflet.markercluster/example/realworld.388.js"></script>
+<!-- <script src="https://leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>
+<script src="https://leaflet.github.io/Leaflet.markercluster/example/realworld.388.js"></script> -->
 
-<script>
-	var mapbox = new L.TileLayer(MB_URL, {maxZoom: 18, attribution: MB_ATTR, id: 'examples.map-i875mjb7'}),
-		latlng = new L.LatLng(-37.820, 175.217);
+<script setup>
+import { onMounted } from 'vue';
 
-	var map = new L.Map('map', {center: latlng, zoom: 15, layers: [mapbox]});
+onMounted(() => {
+	window.setTimeout(() => {
+		var mapbox = new L.TileLayer(MB_URL, {maxZoom: 18, attribution: MB_ATTR, id: 'examples.map-i875mjb7'}),
+			latlng = new L.LatLng(-37.820, 175.217);
 
-	map.attributionControl.addAttribution("Points &copy 2012 LINZ");
+		var map = new L.Map('map', {center: latlng, zoom: 15, layers: [mapbox]});
 
-	var markers = new L.MarkerClusterGroup();
+		map.attributionControl.addAttribution("Points &copy 2012 LINZ");
 
-	for (var i = 0; i < addressPoints.length; i++) {
-		var a = addressPoints[i];
-		var title = a[2];
-		var marker = new L.Marker(new L.LatLng(a[0], a[1]), { title: title });
-		marker.bindPopup(title);
-		markers.addLayer(marker);
-	}
+		var markers = new L.MarkerClusterGroup();
 
-	map.addLayer(markers);
+		for (var i = 0; i < addressPoints.length; i++) {
+			var a = addressPoints[i];
+			var title = a[2];
+			var marker = new L.Marker(new L.LatLng(a[0], a[1]), { title: title });
+			marker.bindPopup(title);
+			markers.addLayer(marker);
+		}
+
+		map.addLayer(markers);
+	}, 100);
+});
 </script>
