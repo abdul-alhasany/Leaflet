@@ -48,9 +48,10 @@ const pluginsDataPath = path.join(__dirname, '../hub/plugins');
 const vitepressDirectoryPath = path.join(__dirname, '../hub/.vitepress');
 
 const files = await fs.readdir(pluginsDataPath, {withFileTypes: true, recursive: true});
+const directories = files.filter(f => f.isDirectory());
 const progressBar = createProgressBar();
-createHeader('Processing');
-progressBar.setTotal(files.length);
+createHeader('Processing plugins...');
+progressBar.setTotal(directories.length);
 
 const readNavigationData = async function (dirPath: string): Promise<NavigationData> {
 	const pluginYamlPath = path.join(dirPath, '.navigation.yml');

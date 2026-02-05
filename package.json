@@ -75,6 +75,7 @@
     "prepare": "husky",
     "docs:dev": "vitepress dev hub",
     "docs:generate:plugins": "vite-node ./scripts/generate-plugins.ts",
+    "docs:generate:api": "vite-node ./scripts/generate-api.ts",
     "docs:build": "vitepress build hub",
     "docs:preview": "vitepress preview hub"
   },

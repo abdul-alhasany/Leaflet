@@ -42,7 +42,8 @@ export default defineConfig({
 		},
 		nav: [
 			{text: 'Blog', link: '/blog'},
-			{text: 'Plugins', link: '/plugins'}
+			{text: 'Plugins', link: '/plugins'},
+			{text: 'API Reference', link: '/api'},
 		],
 		sidebar: {
 			'/blog': [],
