@@ -7,6 +7,7 @@ import pluginsSidebar from './plugins-sidebar.js';
 export default defineConfig({
 	title: 'Leaflet Hub',
 	description: 'Leaflet blog, api reference and documentation',
+	base: '/Leaflet/',
 	head: [
 		[
 			'link',
@@ -32,7 +33,6 @@ export default defineConfig({
 		OSM_ATTRIB = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
       `
 		]
-
 	],
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
