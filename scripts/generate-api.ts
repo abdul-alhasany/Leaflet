@@ -9,7 +9,7 @@ interface RootDoc {
 	[key: string]: ClassDoc;
 }
 
-type SuperSectionKeys = 'option' | 'example' | 'constructor' | 'event' | 'method' | 'property' | 'pane';
+type SuperSectionKeys = 'option' | 'example' | 'constructor' | 'event' | 'method' | 'function' | 'property' | 'pane';
 interface ClassDoc {
 	name: string;
 	aka: string[];
@@ -54,6 +54,7 @@ interface Param {
 	type?: string;
 }
 
+type TableRow = (string | boolean | number)[];
 console.log('Building Leaflet documentation with Leafdoc ...');
 
 const doc = new LeafDoc({
@@ -82,165 +83,340 @@ const outputPath = './output.json';
 const apiDataPath = path.join(__dirname, '../hub/api');
 const json: RootDoc = JSON.parse(doc.outputJSON());
 
-const generateOptions = (optionSection?: SuperSection) => {
-	if (!optionSection) {
-		return '';
-	}
-	let optionsContent = '### Options\n\n';
+// taken from https://github.com/valeriangalliat/markdown-it-anchor/blob/master/index.js#L3
+const slugify = (string: string) => encodeURIComponent(String(string).trim().toLowerCase().replace(/\s+/g, '-'));
 
-	const sortedOptions = Object.values(optionSection.sections).toSorted((a, b) => a.name.localeCompare(b.name));
-	for (const option of sortedOptions) {
-		if (option.name !== '__default') {
-			optionsContent += `#### ${option.name}\n`;
-		}
-		if (option.comments.length) {
-			optionsContent += `${option.comments.join('\n')}\n`;
-		}
-		optionsContent += '| Option | Type | Default | Description |\n';
-		optionsContent += '| --- | --- | --- | --- |\n';
-		for (const optionDoc of Object.values(option.documentables)) {
-			const {name, type, defaultValue, comments} = optionDoc;
-			optionsContent += `| ${name} | ${type || 'unknown'} | ${defaultValue ?? 'none'} | ${comments.join('')} |\n`;
-		}
-	}
-	return optionsContent;
-};
+class ApiDocumentation {
+	className: string;
+	classData : ClassDoc;
+	inherits: ApiDocumentation[];
+	markdownContent: string = '';
+	methods: Section[] = [];
+	functions: Section[] = [];
+	events: Section[] = [];
+	properties: Section[] = [];
+	options: Section[] = [];
+	panes: Section[] = [];
 
-const generateEvents = (eventSection?: SuperSection) => {
-	if (!eventSection) {
-		return '';
-	}
+	constructor(classData: ClassDoc) {
+		this.className = classData.name;
+		this.classData = classData;
+		this.inherits = classData.inherits.map(inheritName => new ApiDocumentation(json[inheritName]));
 
-	let eventsContent = '### Events\n\n';
-	for (const event of Object.values(eventSection.sections)) {
-		if (event.name !== '__default') {
-			eventsContent += `#### ${event.name}\n`;
-		}
-		eventsContent += '| Event | Data | Description |\n';
-		eventsContent += '| --- | --- | --- |\n';
-		for (const eventDoc of Object.values(event.documentables)) {
-			const {name, comments, type} = eventDoc;
-			eventsContent += `| ${name} | ${type} | ${comments.join(' ')} |\n`;
+		const {comments} = classData;
+		this.markdownContent += `## ${this.classData.name}\n`;
+		if (comments.length) {
+			this.markdownContent += `${comments.join('\n')}\n`;
 		}
 
-	}
-	return eventsContent;
-};
-
-const generateMethods = (methodSection?: SuperSection) => {
-	if (!methodSection) {
-		return '';
+		this.getClassProperties();
 	}
 
-	let methodsContent = '### Methods\n\n';
-	const sortedMethods = Object.values(methodSection.sections).toSorted((a, b) => a.name.localeCompare(b.name));
-	for (const method of sortedMethods) {
-		if (method.name !== '__default') {
-			methodsContent += `#### ${method.name}\n`;
+	getClassProperties() {
+		const {method, function: functionSection, event, property, option, pane} = this.classData.supersections;
+		if (method) {
+			this.methods = Object.values(method.sections).toSorted((a, b) => a.name.localeCompare(b.name));
 		}
-		methodsContent += '| Method | Description |\n';
-		methodsContent += '| --- | --- |\n';
-		for (const methodDoc of Object.values(method.documentables)) {
-			const {name, comments, type, params} = methodDoc;
-			const paramsString = Object.values(params).map((param) => {
-				const safeParamType = param.type?.replace(/\|/g, '\\|');
-				return `\\<${safeParamType}> _${param.name}_`;
-			}).join(', ');
 
+		if (functionSection) {
+			this.functions = Object.values(functionSection.sections).toSorted((a, b) => a.name.localeCompare(b.name));
+		}
+
+		if (event) {
+			this.events = Object.values(event.sections).toSorted((a, b) => a.name.localeCompare(b.name));
+		}
+
+		if (property) {
+			this.properties = Object.values(property.sections).toSorted((a, b) => a.name.localeCompare(b.name));
+		}
+
+		if (option) {
+			this.options = Object.values(option.sections).toSorted((a, b) => a.name.localeCompare(b.name));
+		}
+
+		if (pane) {
+			this.panes = Object.values(pane.sections).toSorted((a, b) => a.name.localeCompare(b.name));
+		}
+	}
+
+	createTable(headers: string[], rows: TableRow[]) {
+		let table = `| ${headers.join(' | ')} |\n`;
+		table += `| ${headers.map(() => '---').join(' | ')} |\n`;
+		for (const row of rows) {
+			table += `| ${row.join(' | ')} |\n`;
+		}
+		return table;
+	}
+
+	generateParamsString(params: Record<string, Param>) {
+		const content = Object.values(params).map((param) => {
+			const {name: paramName, type: paramType} = param;
+			const safeParamType = paramType ? paramType.replace(/\|/g, '\\|') : '';
+			return `<div class="param-definition">${paramName}: ${safeParamType}</div>`;
+		}).join('');
+
+		if (content.trim() === '') {
+			return content;
+		}
+		return `${content}`;
+	}
+
+	generateConstructor(constructorSection?: SuperSection) {
+		if (!constructorSection || !constructorSection.sections) {
+			return '';
+		}
+		let constructorContent = '### Constructor ';
+		constructorContent += `{#${slugify(`${this.className}-constructor-list`)}}\n\n`;
+		for (const constructor of Object.values(constructorSection.sections)) {
+			const constructorData = constructor.documentables;
+			if (!constructorData) {
+				continue;
+			}
+
+			const overloads = Object.values(constructorData);
+
+			const headers = ['Signature', 'Description'];
+			const rows: TableRow[] = [];
+
+			for (const overload of overloads) {
+				const {name, comments, params} = overload;
+
+				const paramsString = this.generateParamsString(params);
+				const constructor = `L.${name}(${paramsString})`;
+
+				rows.push([constructor, comments.join(' ')]);
+			}
+			constructorContent += this.createTable(headers, rows);
+		}
+
+		return constructorContent;
+	};
+
+	generateExample(exampleSection?: SuperSection) {
+		if (!exampleSection) {
+			return '';
+		}
+
+		let exampleContent = '### Examples ';
+		exampleContent += `{#${slugify(`${this.className}-examples-list`)}}\n\n`;
+		for (const example of Object.values(exampleSection.sections)) {
+			const exampleData = example.documentables['__default'];
+			if (!exampleData) {
+				continue;
+			}
+
+			if (exampleData.comments.length) {
+				exampleContent += `${exampleData.comments.join('\n')}\n`;
+			}
+		}
+		return exampleContent;
+	};
+
+	generateEventDocumentable(eventDoc: Documentable[]) {
+		const headers = ['Event', 'Data', 'Description'];
+		const rows: TableRow[] = [];
+		for (const entry of Object.values(eventDoc)) {
+			const {name, comments, type} = entry;
+			rows.push([name, type || '', comments.join(' ')]);
+		}
+
+		return this.createTable(headers, rows);
+	}
+
+	generateEventsSection() {
+		if (this.events.length === 0) {
+			return '';
+		}
+
+		let content = '### Events ';
+		content += `{#${slugify(`${this.className}-events-list`)}}\n\n`;
+
+		for (const event of Object.values(this.events)) {
+			if (event.name !== '__default') {
+				content += `#### ${event.name}\n`;
+			}
+
+			content += this.generateEventDocumentable(Object.values(event.documentables));
+		}
+		return content;
+	};
+
+
+	generateOptionsDocumentable(optionDoc: Documentable[]) {
+		const headers = ['Option', 'Description'];
+		const rows: TableRow[] = [];
+
+		for (const entry of Object.values(optionDoc)) {
+			const {name, type, defaultValue, comments} = entry;
+
+			const typeContent = type ? type.replace(/\|/g, '\\|') : '';
+			const defaultValueContent = `<span class='default-value'>default: ${defaultValue ?? 'none'}</span>`;
+			rows.push([`<div class="option-definition">${name} (${typeContent})</div>${defaultValueContent}`, comments.join(' ')]);
+		}
+
+		return this.createTable(headers, rows);
+	}
+
+	generateOptionsSection() {
+		if (this.options.length === 0) {
+			return '';
+		}
+
+		let content = '### Options ';
+		content += `{#${slugify(`${this.className}-options-list`)}}\n\n`;
+
+		for (const option of Object.values(this.options)) {
+			if (option.name !== '__default') {
+				content += `#### ${option.name}\n`;
+			}
+
+			if (option.comments.length) {
+				content += `${option.comments.join('\n')}\n`;
+			}
+
+			content += this.generateOptionsDocumentable(Object.values(option.documentables));
+		}
+
+		return content;
+	};
+
+	generateMethodDocumentable(methodDoc: Documentable[]) {
+		const headers = ['Signature', 'Description'];
+		const rows: TableRow[] = [];
+		for (const entry of Object.values(methodDoc)) {
+			const {name, comments, type, params} = entry;
+
+			const paramsString = this.generateParamsString(params);
 			const methodSignature = `.${name}(${paramsString}): ${type || 'void'}`;
 
-			methodsContent += `| ${methodSignature} | ${comments.join(' ')} |\n`;
-		}
-	}
-	return methodsContent;
-};
-
-const generateProperties = (propertySection?: SuperSection) => {
-	if (!propertySection) {
-		return '';
-	}
-
-	let propertiesContent = '### Properties\n\n';
-	const sortedProperties = Object.values(propertySection.sections).toSorted((a, b) => a.name.localeCompare(b.name));
-	for (const property of sortedProperties) {
-		if (property.name !== '__default') {
-			propertiesContent += `#### ${property.name}\n`;
-		}
-		propertiesContent += '| Property | Type | Description |\n';
-		propertiesContent += '| --- | --- | --- |\n';
-		for (const propertyDoc of Object.values(property.documentables)) {
-			const {name, comments, type} = propertyDoc;
-			propertiesContent += `| ${name} | ${type || 'unknown'} | ${comments.join(' ')} |\n`;
-		}
-	}
-	return propertiesContent;
-};
-
-const generatePanes = (paneSection?: SuperSection) => {
-	if (!paneSection) {
-		return '';
-	}
-
-	let panesContent = '### Panes\n\n';
-	for (const pane of Object.values(paneSection.sections)) {
-		panesContent += `${pane.comments.join('\n')  }\n`;
-		panesContent += '| Pane | Type | z-index | Description |\n';
-		panesContent += '| --- | --- | --- | --- |\n';
-		for (const paneDoc of Object.values(pane.documentables)) {
-			const {name, comments, defaultValue, type} = paneDoc;
-			panesContent += `| ${name} | ${type} | ${defaultValue} | ${comments.join(' ')} |\n`;
-		}
-	}
-	return panesContent;
-};
-
-const generateExample = (exampleSection?: SuperSection) => {
-	if (!exampleSection) {
-		return '';
-	}
-
-	let exampleContent = '### Examples\n\n';
-	for (const example of Object.values(exampleSection.sections)) {
-		const exampleData = example.documentables['__default'];
-		if (!exampleData) {
-			continue;
+			rows.push([methodSignature, comments.join(' ')]);
 		}
 
-		if (exampleData.comments.length) {
-			exampleContent += `${exampleData.comments.join('\n')}\n`;
-		}
+		return this.createTable(headers, rows);
 	}
-	return exampleContent;
-};
 
-const generateConstructor = (constructorSection?: SuperSection) => {
-	if (!constructorSection || !constructorSection.sections) {
-		return '';
-	}
-	let constructorContent = '### Constructor\n\n';
-	for (const constructor of Object.values(constructorSection.sections)) {
-		const constructorData = constructor.documentables;
-		if (!constructorData) {
-			continue;
+	generateMethodsSection() {
+		if (this.methods.length === 0) {
+			return '';
 		}
 
-		const overloads = Object.values(constructorData);
-		constructorContent += '| Factory | Description |\n';
-		constructorContent += '| --- | --- |\n';
-		for (const overload of overloads) {
-			const {name, comments, params} = overload;
-			const paramsString = Object.values(params).map((param) => {
-				const safeParamType = param.type?.replace(/\|/g, '\\|');
-				return `\\<${safeParamType}> _${param.name}_`;
-			}).join(', ');
+		let content = '### Methods ';
+		content += `{#${slugify(`${this.className}-methods-list`)}}\n\n`;
+		for (const entry of Object.values(this.methods)) {
+			if (entry.name !== '__default') {
+				content += `#### ${entry.name}\n`;
+			}
 
-			const constructor = `L.${name}(${paramsString})`;
-
-			constructorContent += `| ${constructor} | ${comments.join(' ')} |\n`;
+			content += this.generateMethodDocumentable(Object.values(entry.documentables));
 		}
+		return content;
+	};
+
+	generateFunctionDocumentable(functionDoc: Documentable[]) {
+		const headers = ['Signature', 'Description'];
+		const rows: TableRow[] = [];
+		for (const entry of Object.values(functionDoc)) {
+			const {name, comments, type, params} = entry;
+
+			const paramsString = this.generateParamsString(params);
+			const functionSignature = `${name}(${paramsString}): ${type || 'void'}`;
+
+			rows.push([functionSignature, comments.join(' ')]);
+		}
+
+		return this.createTable(headers, rows);
 	}
-	return constructorContent;
-};
+
+	generateFunctionsSection() {
+		if (this.functions.length === 0) {
+			return '';
+		}
+
+		let content = '### Functions ';
+		content += `{#${slugify(`${this.className}-functions-list`)}}\n\n`;
+
+		for (const entry of Object.values(this.functions)) {
+			if (entry.name !== '__default') {
+				content += `#### ${entry.name}\n`;
+			}
+
+			content += this.generateFunctionDocumentable(Object.values(entry.documentables));
+		}
+		return content;
+	};
+
+	generatePropertyDocumentable(propertyDoc: Documentable[]) {
+		const headers = ['Property', 'Description'];
+		const rows: TableRow[] = [];
+		for (const entry of Object.values(propertyDoc)) {
+			const {name, comments, type} = entry;
+			const safeType = type ? type.replace(/\|/g, '\\|') : '';
+			rows.push([`<div class="property-definition">${name} (${safeType})</div>`, comments.join(' ')]);
+		}
+
+		return this.createTable(headers, rows);
+	}
+
+	generatePropertiesSection() {
+		if (this.properties.length === 0) {
+			return '';
+		}
+
+		let content = '### Properties ';
+		content += `{#${slugify(`${this.className}-properties-list`)}}\n\n`;
+
+		for (const entry of this.properties) {
+			if (entry.name !== '__default') {
+				content += `#### ${entry.name}\n`;
+			}
+
+			content += this.generatePropertyDocumentable(Object.values(entry.documentables));
+		}
+		return content;
+	};
+
+	generatePaneDocumentable(paneDoc: Documentable[]) {
+		const headers = ['Pane', 'Description'];
+		const rows: TableRow[] = [];
+		for (const entry of Object.values(paneDoc)) {
+			const {name, comments, type, defaultValue} = entry;
+			const safeType = type ? type.replace(/\|/g, '\\|') : '';
+			const defaultValueContent = `<span class='default-value'>z-index: ${defaultValue ?? 'none'}</span>`;
+			rows.push([`<div class="pane-definition">${name} (${safeType})</div> ${defaultValueContent}`, comments.join(' ')]);
+		}
+
+		return this.createTable(headers, rows);
+	}
+
+	generatePanesSection() {
+		if (this.panes.length === 0) {
+			return '';
+		}
+
+		let content = '### Panes ';
+		content += `{#${slugify(`${this.className}-panes-list`)}}\n\n`;
+		for (const pane of Object.values(this.panes)) {
+			content += `${pane.comments.join('\n')  }\n`;
+			content += this.generatePaneDocumentable(Object.values(pane.documentables));
+		}
+
+		return content;
+	};
+
+	getOutput() {
+		this.markdownContent += this.generateExample(this.classData.supersections.example);
+		this.markdownContent += this.generateConstructor(this.classData.supersections.constructor);
+		this.markdownContent += this.generateOptionsSection();
+		this.markdownContent += this.generateEventsSection();
+		this.markdownContent += this.generateMethodsSection();
+		this.markdownContent += this.generateFunctionsSection();
+		this.markdownContent += this.generatePropertiesSection();
+		this.markdownContent += this.generatePanesSection();
+
+		return this.markdownContent;
+	}
+
+}
 
 let markdownContent = '---\n';
 // markdownContent += 'outline: [2]\n';
@@ -248,19 +424,39 @@ markdownContent += '---\n\n';
 markdownContent += '<!-- This file is auto-generated with the script "scripts/generate-api.ts" -->\n\n';
 markdownContent += '# API Reference\n\n';
 for (const classDoc of Object.values(json)) {
-	const {id, comments} = classDoc;
-	markdownContent += `## ${classDoc.name}\n`;
-	if (comments.length) {
-		markdownContent += `${comments.join('\n')}\n`;
-	}
-	markdownContent += generateExample(classDoc.supersections.example);
-	markdownContent += generateConstructor(classDoc.supersections.constructor);
-	markdownContent += generateOptions(classDoc.supersections.option);
-	markdownContent += generateEvents(classDoc.supersections.event);
-	markdownContent += generateMethods(classDoc.supersections.method);
-	markdownContent += generateProperties(classDoc.supersections.property);
-	markdownContent += generatePanes(classDoc.supersections.pane);
-	console.log(`Generated docs for class: ${id}`);
-
+	const apiDoc = new ApiDocumentation(classDoc);
+	markdownContent += apiDoc.getOutput();
 }
+
+// style
+markdownContent += '\n<style>\n';
+markdownContent += `
+.default-value {
+	font-size: 0.9em;
+	color: var(--text-secondary);
+}
+
+.param-definition {
+	white-space: nowrap;
+	padding-inline-start: 10px;
+}
+
+.param-definition:not(:last-child):after {
+	content: ',';
+}
+
+.option-definition {
+	white-space: nowrap;
+}
+
+.property-definition {
+	white-space: nowrap;
+}
+
+.pane-definition {
+	white-space: nowrap;
+}
+`;
+markdownContent += '\n</style>\n';
+
 await writeFile(path.join(apiDataPath, 'index.md'), markdownContent);
